@@ -1,5 +1,15 @@
 module.exports = {
   testEnvironment: 'node',
+  collectCoverage: true,
+  coverageDirectory: 'coverage',
+  coverageReporters: ['lcov', 'text'],
+  collectCoverageFrom: [
+    'services/**/*.js',
+    'routes/**/*.js',
+    '!**/*.test.js',
+    '!**/node_modules/**',
+    '!**/__mocks__/**'
+  ],
   moduleNameMapper: {
     '^uuid$': require.resolve('./__mocks__/uuid.js')
   },
