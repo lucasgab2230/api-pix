@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="jest tests" tests="17" failures="0" errors="0" time="1.051">
+  <testsuite name="PixService" errors="0" failures="0" skipped="0" timestamp="2026-01-01T01:26:07" time="0.884" tests="17">
+    <testcase classname="PixService registerPixKey" name="should register a new PIX key with CPF" time="0.007">
+    </testcase>
+    <testcase classname="PixService registerPixKey" name="should register a new PIX key with email" time="0.002">
+    </testcase>
+    <testcase classname="PixService getPixKey" name="should return the correct PIX key" time="0.002">
+    </testcase>
+    <testcase classname="PixService getPixKey" name="should return undefined for non-existent key" time="0.002">
+    </testcase>
+    <testcase classname="PixService getAllPixKeys" name="should return all PIX keys" time="0.002">
+    </testcase>
+    <testcase classname="PixService deletePixKey" name="should deactivate a PIX key" time="0.002">
+    </testcase>
+    <testcase classname="PixService deletePixKey" name="should return false for non-existent key" time="0.002">
+    </testcase>
+    <testcase classname="PixService createTransaction" name="should create a valid transaction" time="0.002">
+    </testcase>
+    <testcase classname="PixService createTransaction" name="should throw error for invalid sender key" time="0.026">
+    </testcase>
+    <testcase classname="PixService createTransaction" name="should throw error for invalid receiver key" time="0.009">
+    </testcase>
+    <testcase classname="PixService createTransaction" name="should throw error when sending to same key" time="0.003">
+    </testcase>
+    <testcase classname="PixService createTransaction" name="should throw error for inactive keys" time="0.003">
+    </testcase>
+    <testcase classname="PixService getTransaction" name="should return the correct transaction" time="0.002">
+    </testcase>
+    <testcase classname="PixService getTransaction" name="should return undefined for non-existent transaction" time="0.002">
+    </testcase>
+    <testcase classname="PixService getTransactionsByPixKey" name="should return all transactions for a PIX key as sender" time="0.003">
+    </testcase>
+    <testcase classname="PixService getTransactionsByPixKey" name="should return all transactions for a PIX key as receiver" time="0.001">
+    </testcase>
+    <testcase classname="PixService getAllTransactions" name="should return all transactions" time="0.001">
+    </testcase>
+  </testsuite>
+</testsuites>
