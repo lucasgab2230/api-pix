@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [ main, develop, lucasgab2230/ci ]
   pull_request:
     branches: [ main, develop ]
 
@@ -81,6 +81,12 @@ jobs:
     
     - name: Install dependencies
       run: npm ci
+    
+    - name: Run tests with coverage
+      run: npm test
+    
+    - name: Generate lint report
+      run: npm run lint:report
     
     - name: Run SonarCloud Scan
       uses: SonarSource/sonarcloud-github-action@master
