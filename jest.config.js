@@ -6,6 +6,7 @@ module.exports = {
   collectCoverageFrom: [
     'services/**/*.js',
     'routes/**/*.js',
+    'server.js',
     '!**/*.test.js',
     '!**/node_modules/**',
     '!**/__mocks__/**'

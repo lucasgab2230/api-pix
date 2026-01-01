@@ -16,6 +16,10 @@ app.use(bodyParser.json());
 app.use('/api/pix', pixRoutes);
 app.use('/api/transactions', transactionRoutes);
 
-app.listen(PORT, () => {
-  console.log(`PIX API server running on port ${PORT}`);
-});
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`PIX API server running on port ${PORT}`);
+  });
+}
+
+module.exports = app;
