@@ -1,7 +1,12 @@
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import type { Transaction, PixKey } from './api';
 
-export function exportToPDF(transactions: unknown[], filename: string = 'extrato.pdf') {
+interface PDFAutoTable {
+  lastAutoTable?: { finalY: number };
+}
+
+export function exportToPDF(transactions: Transaction[], filename: string = 'extrato.pdf') {
   const doc = new jsPDF();
 
   doc.setFontSize(16);
@@ -10,23 +15,23 @@ export function exportToPDF(transactions: unknown[], filename: string = 'extrato
   doc.setFontSize(10);
   doc.text(`Data de geração: ${new Date().toLocaleDateString('pt-BR')}`, 14, 30);
 
-  const tableData = transactions.map((t: any, index: number) => [
+  const tableData = transactions.map((t: Transaction, index: number) => [
     index + 1,
     t.description || 'PIX',
     t.senderName || '',
     t.receiverName || '',
-    new Date(t.createdAt || Date.now()).toLocaleDateString('pt-BR'),
-    (t.amount || 0).toFixed(2),
+    new Date(t.createdAt).toLocaleDateString('pt-BR'),
+    t.amount.toFixed(2),
     t.status === 'completed' ? 'Concluída' :
     t.status === 'pending' ? 'Pendente' :
     t.status === 'failed' ? 'Falhou' :
-    t.status === 'cancelled' ? 'Cancelada' : t.status || '',
+    t.status === 'cancelled' ? 'Cancelada' : t.status,
   ]);
 
   autoTable(doc, {
     startY: 40,
     head: [['#', 'Descrição', 'Remetente', 'Destinatário', 'Data', 'Valor', 'Status']],
-    body: tableData as any[][],
+    body: tableData,
     theme: 'grid',
     styles: {
       fontSize: 8,
@@ -51,14 +56,14 @@ export function exportToPDF(transactions: unknown[], filename: string = 'extrato
   });
 
   const totalSent = transactions
-    .filter((t: any) => t.status === 'completed')
-    .reduce((sum: number, t: any) => sum + (t.amount || 0), 0);
+    .filter((t: Transaction) => t.status === 'completed')
+    .reduce((sum: number, t: Transaction) => sum + t.amount, 0);
 
   const totalReceived = transactions
-    .filter((t: any) => t.status === 'completed')
-    .reduce((sum: number, t: any) => sum + (t.amount || 0), 0);
+    .filter((t: Transaction) => t.status === 'completed')
+    .reduce((sum: number, t: Transaction) => sum + t.amount, 0);
 
-  const finalY = (doc as any).lastAutoTable?.finalY ?? 62 + 10;
+  const finalY = (doc as PDFAutoTable).lastAutoTable?.finalY ?? 62 + 10;
   doc.setFontSize(12);
   doc.setFont('helvetica', 'bold');
   doc.text(`Total Enviado: R$ ${totalSent.toFixed(2)}`, 14, finalY);
@@ -72,21 +77,21 @@ export function exportToPDF(transactions: unknown[], filename: string = 'extrato
   doc.save(filename);
 }
 
-export function exportToCSV(transactions: unknown[], filename: string = 'extrato.csv') {
+export function exportToCSV(transactions: Transaction[], filename: string = 'extrato.csv') {
   const headers = ['ID', 'Descrição', 'Remetente', 'Destinatário', 'Data', 'Valor', 'Status', 'Criado Em', 'Atualizado Em'];
   
   const csvData = [
     headers.join(','),
-    ...transactions.map((t: any) => [
-      t.id || '',
+    ...transactions.map((t: Transaction) => [
+      t.id,
       `"${t.description || 'PIX'}"`,
-      `"${t.senderName || ''}"`,
-      `"${t.receiverName || ''}"`,
-      `"${new Date(t.createdAt || Date.now()).toLocaleDateString('pt-BR')}"`,
-      (t.amount || 0).toFixed(2),
-      t.status || '',
-      `"${new Date(t.createdAt || Date.now()).toLocaleString('pt-BR')}"`,
-      `"${new Date(t.updatedAt || Date.now()).toLocaleString('pt-BR')}"`,
+      `"${t.senderName}"`,
+      `"${t.receiverName}"`,
+      `"${new Date(t.createdAt).toLocaleDateString('pt-BR')}"`,
+      t.amount.toFixed(2),
+      t.status,
+      `"${new Date(t.createdAt).toLocaleString('pt-BR')}"`,
+      `"${new Date(t.updatedAt).toLocaleString('pt-BR')}"`,
     ].join(',')),
   ].join('\n');
 
@@ -105,7 +110,7 @@ export function exportToCSV(transactions: unknown[], filename: string = 'extrato
   URL.revokeObjectURL(url);
 }
 
-export function generateBalanceReport(pixKeys: unknown[], transactions: unknown[]) {
+export function generateBalanceReport(pixKeys: PixKey[], transactions: Transaction[]) {
   const doc = new jsPDF();
 
   doc.setFontSize(16);
@@ -115,21 +120,21 @@ export function generateBalanceReport(pixKeys: unknown[], transactions: unknown[
   doc.text(`Data de geração: ${new Date().toLocaleDateString('pt-BR')}`, 14, 30);
   doc.text('', 14, 35);
 
-  const keysData = pixKeys.map((k: any, index: number) => [
+  const keysData = pixKeys.map((k: PixKey, index: number) => [
     index + 1,
-    k.name || '',
-    k.type || '',
-    k.key || '',
-    k.bank || '',
-    k.account || '',
-    (k.balance || 0).toFixed(2),
+    k.name,
+    k.type,
+    k.key,
+    k.bank,
+    k.account,
+    k.balance.toFixed(2),
     k.active ? 'Ativa' : 'Inativa',
   ]);
 
   autoTable(doc, {
     startY: 40,
     head: [['#', 'Nome', 'Tipo', 'Chave', 'Banco', 'Conta', 'Saldo', 'Status']],
-    body: keysData as any[][],
+    body: keysData,
     theme: 'grid',
     styles: {
       fontSize: 8,
@@ -151,20 +156,20 @@ export function generateBalanceReport(pixKeys: unknown[], transactions: unknown[
     },
   });
 
-  const totalBalance = (pixKeys as Array<{ balance: number }>).reduce((sum, k) => sum + k.balance, 0);
-  const keysY = (doc as any).lastAutoTable?.finalY ?? 62 + 10;
+  const totalBalance = pixKeys.reduce((sum, k) => sum + k.balance, 0);
+  const keysY = (doc as PDFAutoTable).lastAutoTable?.finalY ?? 62 + 10;
   doc.setFontSize(12);
   doc.setFont('helvetica', 'bold');
   doc.text(`Saldo Total: R$ ${totalBalance.toFixed(2)}`, 14, keysY);
   doc.text(`Total de Chaves: ${pixKeys.length}`, 14, keysY + 8);
 
-  const completedTransactions = transactions.filter((t: any) => t.status === 'completed');
+  const completedTransactions = transactions.filter((t: Transaction) => t.status === 'completed');
   const totalSent = completedTransactions
-    .filter((t: any) => t.senderName === 'Você')
-    .reduce((sum: number, t: any) => sum + (t.amount || 0), 0);
+    .filter((t: Transaction) => t.senderName === 'Você')
+    .reduce((sum: number, t: Transaction) => sum + t.amount, 0);
   const totalReceived = completedTransactions
-    .filter((t: any) => t.receiverName === 'Você')
-    .reduce((sum: number, t: any) => sum + (t.amount || 0), 0);
+    .filter((t: Transaction) => t.receiverName === 'Você')
+    .reduce((sum: number, t: Transaction) => sum + t.amount, 0);
 
   doc.text(`Total Enviado: R$ ${totalSent.toFixed(2)}`, 14, keysY + 16);
   doc.text(`Total Recebido: R$ ${totalReceived.toFixed(2)}`, 14, keysY + 24);

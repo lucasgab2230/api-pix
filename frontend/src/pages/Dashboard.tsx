@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { LogOut, Wallet, ArrowUpRight, ArrowDownLeft, AlertTriangle, CheckCircle, Download, TrendingUp, Bell, Settings, Calendar } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
-import { useRealtime } from '../contexts/RealtimeContext';
+import { useAuth } from '../contexts/useAuth';
+import { useRealtime } from '../contexts/useRealtime';
 import type { PixKey, Transaction } from '../lib/api';
 import { pixApi } from '../lib/api';
 import { formatCurrency, BACEN_LIMITS } from '../lib/validators';
@@ -35,7 +35,7 @@ export function Dashboard() {
         }
       });
     }
-  }, [realtimeEvents]);
+  }, [realtimeConnected, realtimeEvents]);
 
   const loadData = async () => {
     try {

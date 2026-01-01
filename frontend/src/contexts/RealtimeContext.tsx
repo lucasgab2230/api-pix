@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState, useCallback } from 'react';
+import { createContext, useEffect, useState, useCallback } from 'react';
 import type { ReactNode } from 'react';
 import type { RealtimeChannel } from '@supabase/supabase-js';
 import { supabase } from './supabase';
@@ -22,6 +22,9 @@ interface RealtimeContextType {
 }
 
 const RealtimeContext = createContext<RealtimeContextType | undefined>(undefined);
+
+export { RealtimeContext };
+export type { RealtimeContextType };
 
 export function RealtimeProvider({ children }: { children: ReactNode }) {
   const [isConnected, setIsConnected] = useState(false);
@@ -186,12 +189,4 @@ export function RealtimeProvider({ children }: { children: ReactNode }) {
   };
 
   return <RealtimeContext.Provider value={value}>{children}</RealtimeContext.Provider>;
-}
-
-export function useRealtime() {
-  const context = useContext(RealtimeContext);
-  if (context === undefined) {
-    throw new Error('useRealtime must be used within a RealtimeProvider');
-  }
-  return context;
 }

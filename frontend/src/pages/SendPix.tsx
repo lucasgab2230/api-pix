@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { ArrowRight, Search, AlertTriangle, CheckCircle } from 'lucide-react';
 import { pixApi } from '../lib/api';
@@ -28,21 +28,24 @@ export function SendPix() {
 
   useEffect(() => {
     loadPixKeys();
-  }, []);
+  }, [loadPixKeys]);
 
-  const loadPixKeys = async () => {
+  const loadPixKeys = useCallback(async () => {
     try {
       const data = await pixApi.getPixKeys();
       setPixKeys(data);
-      if (data.length === 1 && !formData.senderKey) {
-        setFormData({ ...formData, senderKey: data[0].key });
-      }
+      setFormData(prevFormData => {
+        if (data.length === 1 && !prevFormData.senderKey) {
+          return { ...prevFormData, senderKey: data[0].key };
+        }
+        return prevFormData;
+      });
     } catch (error) {
       console.error('Error loading PIX keys:', error);
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   const handleSearchKey = async () => {
     if (!formData.receiverKey) {
@@ -118,8 +121,8 @@ export function SendPix() {
         description: formData.description,
       });
       navigate(`/transactions/${transaction.id}`, { replace: true });
-    } catch (error: any) {
-      setErrors({ ...errors, submit: error.message || 'Erro ao criar transação' });
+    } catch (error: unknown) {
+      setErrors({ ...errors, submit: error instanceof Error ? error.message : 'Erro ao criar transação' });
     } finally {
       setSubmitting(false);
     }
