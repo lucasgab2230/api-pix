@@ -5,7 +5,10 @@
   "main": "index.js",
   "scripts": {
     "start": "node server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "build": "echo 'Build successful'"
   },
   "keywords": [],
   "author": "",
@@ -16,5 +19,8 @@
     "cors": "^2.8.5",
     "express": "^5.2.1",
     "uuid": "^13.0.0"
+  },
+  "devDependencies": {
+    "eslint": "^9.15.0"
   }
 }
