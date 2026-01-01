@@ -7,6 +7,7 @@ module.exports = {
     'services/**/*.js',
     'routes/**/*.js',
     'server.js',
+    '!jest.config.js',
     '!**/*.test.js',
     '!**/node_modules/**',
     '!**/__mocks__/**'
