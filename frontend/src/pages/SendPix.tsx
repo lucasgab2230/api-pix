@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { ArrowRight, Search, AlertTriangle, CheckCircle } from 'lucide-react';
-import { pixApi, PixKey } from '../lib/api';
-import { validatePixKey, validateAmount, formatCurrency, BACEN_LIMITS, checkAMLTransaction } from '../lib/validators';
+import { pixApi } from '../lib/api';
+import type { PixKey } from '../lib/api';
+import { validateAmount, formatCurrency, BACEN_LIMITS, checkAMLTransaction } from '../lib/validators';
 import { Button } from '../components/Button';
 import { Input } from '../components/Input';
 import { Card } from '../components/Card';
@@ -12,7 +13,7 @@ export function SendPix() {
   const [searchParams] = useSearchParams();
   const [pixKeys, setPixKeys] = useState<PixKey[]>([]);
   const [loading, setLoading] = useState(true);
-  const [step, setStep] = useState(1);
+
   const [searchingKey, setSearchingKey] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [formData, setFormData] = useState({
@@ -56,9 +57,8 @@ export function SendPix() {
     try {
       const data = await pixApi.getPixKey(formData.receiverKey);
       setReceiverInfo(data);
-      setStep(2);
-    } catch (error: any) {
-      setErrors({ ...errors, receiverKey: error.message || 'Chave PIX não encontrada' });
+    } catch (error: unknown) {
+      setErrors({ ...errors, receiverKey: error instanceof Error ? error.message : 'Chave PIX não encontrada' });
     } finally {
       setSearchingKey(false);
     }

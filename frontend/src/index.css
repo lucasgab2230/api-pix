@@ -1,14 +1,18 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 @layer base {
   * {
-    @apply border-border;
+    border-color: theme('colors.gray.200');
   }
-  
+
   body {
-    @apply bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100;
+    background-color: theme('colors.gray.50');
+    color: theme('colors.gray.900');
+  }
+
+  .dark body {
+    background-color: theme('colors.gray.900');
+    color: theme('colors.gray.100');
   }
 }
 

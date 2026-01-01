@@ -1,11 +1,12 @@
-import { createContext, useContext, useEffect, useState, ReactNode, useCallback } from 'react';
-import { RealtimeChannel, RealtimePostgresChangesPayload } from '@supabase/supabase-js';
+import { createContext, useContext, useEffect, useState, useCallback } from 'react';
+import type { ReactNode } from 'react';
+import type { RealtimeChannel } from '@supabase/supabase-js';
 import { supabase } from './supabase';
 
 export type RealtimeEvent = {
   type: 'transaction' | 'balance' | 'pix_key';
   action: 'insert' | 'update' | 'delete';
-  data: any;
+  data: unknown;
   timestamp: Date;
 };
 
@@ -13,9 +14,9 @@ interface RealtimeContextType {
   isConnected: boolean;
   events: RealtimeEvent[];
   lastEvent: RealtimeEvent | null;
-  subscribeToTransactions: (callback: (payload: any) => void) => () => void;
-  subscribeToBalances: (callback: (payload: any) => void) => () => void;
-  subscribeToPixKeys: (callback: (payload: any) => void) => () => void;
+  subscribeToTransactions: (callback: (payload: unknown) => void) => () => void;
+  subscribeToBalances: (callback: (payload: unknown) => void) => () => void;
+  subscribeToPixKeys: (callback: (payload: unknown) => void) => () => void;
   addEvent: (event: RealtimeEvent) => void;
   clearEvents: () => void;
 }
@@ -41,10 +42,10 @@ export function RealtimeProvider({ children }: { children: ReactNode }) {
               schema: 'public',
               table: 'transactions'
             },
-            (payload) => {
+            (payload: { eventType: string; new: unknown }) => {
               const newEvent: RealtimeEvent = {
                 type: 'transaction',
-                action: payload.eventType as any,
+                action: payload.eventType as 'insert' | 'update' | 'delete',
                 data: payload.new,
                 timestamp: new Date()
               };
@@ -52,7 +53,7 @@ export function RealtimeProvider({ children }: { children: ReactNode }) {
               setLastEvent(newEvent);
             }
           )
-          .subscribe((status) => {
+          .subscribe((status: string) => {
             if (status === 'SUBSCRIBED') {
               setIsConnected(true);
               console.log('Realtime: Connected to transactions channel');
@@ -68,7 +69,7 @@ export function RealtimeProvider({ children }: { children: ReactNode }) {
               schema: 'public',
               table: 'pix_keys'
             },
-            (payload) => {
+            (payload: { new: unknown }) => {
               const newEvent: RealtimeEvent = {
                 type: 'balance',
                 action: 'update',
@@ -90,10 +91,10 @@ export function RealtimeProvider({ children }: { children: ReactNode }) {
               schema: 'public',
               table: 'pix_keys'
             },
-            (payload) => {
+            (payload: { eventType: string; new: unknown }) => {
               const newEvent: RealtimeEvent = {
                 type: 'pix_key',
-                action: payload.eventType as any,
+                action: payload.eventType as 'insert' | 'update' | 'delete',
                 data: payload.new,
                 timestamp: new Date()
               };
@@ -118,7 +119,7 @@ export function RealtimeProvider({ children }: { children: ReactNode }) {
     };
   }, []);
 
-  const subscribeToTransactions = useCallback((callback: (payload: any) => void) => {
+  const subscribeToTransactions = useCallback((callback: (payload: unknown) => void) => {
     const channel = supabase
       .channel('custom_transactions')
       .on('postgres_changes', {
@@ -133,7 +134,7 @@ export function RealtimeProvider({ children }: { children: ReactNode }) {
     };
   }, []);
 
-  const subscribeToBalances = useCallback((callback: (payload: any) => void) => {
+  const subscribeToBalances = useCallback((callback: (payload: unknown) => void) => {
     const channel = supabase
       .channel('custom_balances')
       .on('postgres_changes', {
@@ -148,7 +149,7 @@ export function RealtimeProvider({ children }: { children: ReactNode }) {
     };
   }, []);
 
-  const subscribeToPixKeys = useCallback((callback: (payload: any) => void) => {
+  const subscribeToPixKeys = useCallback((callback: (payload: unknown) => void) => {
     const channel = supabase
       .channel('custom_pix_keys')
       .on('postgres_changes', {

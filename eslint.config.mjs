@@ -3,7 +3,7 @@ import globals from 'globals';
 
 export default [
   {
-    ignores: ['eslint.config.mjs']
+    ignores: ['eslint.config.mjs', 'frontend/**']
   },
   js.configs.recommended,
   {

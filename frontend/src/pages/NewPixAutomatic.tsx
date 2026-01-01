@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Calendar, Clock, ArrowRight } from 'lucide-react';
-import { formatCurrency } from '../lib/validators';
 
 type FrequencyType = 'daily' | 'weekly' | 'monthly';
 

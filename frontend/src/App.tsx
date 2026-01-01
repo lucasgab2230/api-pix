@@ -7,7 +7,7 @@ import { Dashboard } from './pages/Dashboard';
 import { PixKeys } from './pages/PixKeys';
 import { SendPix } from './pages/SendPix';
 import { Transactions } from './pages/Transactions';
-import { PixAutomatic } from './pages/PixAutomatic';
+
 import { NewPixAutomatic } from './pages/NewPixAutomatic';
 import { BankSettings } from './pages/BankSettings';
 
@@ -105,14 +105,7 @@ export function App() {
               </ProtectedRoute>
             }
           />
-          <Route
-            path="/pix-automatic"
-            element={
-              <ProtectedRoute>
-                <PixAutomatic />
-              </ProtectedRoute>
-            }
-          />
+
           <Route
             path="/pix-automatic/new"
             element={
@@ -125,7 +118,7 @@ export function App() {
             path="/bank-settings"
             element={
               <ProtectedRoute>
-                <BankSettings />
+                <BankSettings onBack={() => window.location.href = '/dashboard'} />
               </ProtectedRoute>
             }
           />

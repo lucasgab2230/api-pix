@@ -1,37 +1,29 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Building2, Check, Globe, Lock, RefreshCw, ArrowRight, Trash2, AlertTriangle } from 'lucide-react';
-import { 
-  AVAILABLE_BANKS, 
-  getBankConfig, 
-  saveBankConfig, 
+import {
+  AVAILABLE_BANKS,
+  getBankConfig,
+  saveBankConfig,
   getBankById,
-  getActiveBanks,
   requestOpenFinanceConsent,
   revokeOpenFinanceConsent,
   getOpenFinanceConsent,
   OPEN_FINANCE_SCOPES,
-  shareDataWithOpenFinance,
   syncOpenFinanceData,
-  type Bank,
   type OpenFinanceConsent,
 } from '../lib/banks';
 
 interface BankSettingsProps {
-  onBack: () => void;
+  onBack?: () => void;
 }
 
 export function BankSettings({ onBack }: BankSettingsProps) {
   const [config, setConfig] = useState(getBankConfig());
   const [selectedBanks, setSelectedBanks] = useState<string[]>(config.allowedBanks);
   const [openFinanceEnabled, setOpenFinanceEnabled] = useState(config.enableOpenFinance);
-  const [openFinanceConsent, setOpenFinanceConsent] = useState<OpenFinanceConsent | null>(null);
+  const [openFinanceConsent, setOpenFinanceConsent] = useState<OpenFinanceConsent | null>(getOpenFinanceConsent());
   const [syncing, setSyncing] = useState(false);
   const [syncMessage, setSyncMessage] = useState('');
-
-  useEffect(() => {
-    const consent = getOpenFinanceConsent();
-    setOpenFinanceConsent(consent);
-  }, []);
 
   const handleToggleBank = (bankId: string) => {
     const newSelectedBanks = selectedBanks.includes(bankId)
@@ -102,12 +94,14 @@ export function BankSettings({ onBack }: BankSettingsProps) {
               </p>
             </div>
           </div>
+          {onBack && (
           <button
             onClick={onBack}
             className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-900 transition-all hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:hover:bg-gray-700"
           >
             Voltar
           </button>
+          )}
         </div>
       </nav>
 
@@ -231,7 +225,7 @@ export function BankSettings({ onBack }: BankSettingsProps) {
                       Consentimento Ativo
                     </p>
                     <p className="mt-1 text-sm text-success-800 dark:text-success-200">
-                      Data de consentimento: {new Date(openFinanceConsent.dataSharing.consentDate).toLocaleDateString('pt-BR')}
+                      Data de consentimento: {openFinanceConsent.dataSharing.consentDate ? new Date(openFinanceConsent.dataSharing.consentDate).toLocaleDateString('pt-BR') : 'N/A'}
                     </p>
                     <p className="mt-1 text-sm text-success-800 dark:text-success-200">
                       Escopos autorizados:

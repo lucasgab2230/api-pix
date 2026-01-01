@@ -1,4 +1,4 @@
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar, AreaChart, Area, PieChart, Pie, Cell } from 'recharts';
+import { Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar, AreaChart, Area, PieChart, Pie, Cell } from 'recharts';
 
 interface BalanceChartProps {
   data: Array<{
@@ -46,11 +46,12 @@ export function BalanceChart({ data }: BalanceChartProps) {
               borderRadius: '8px',
               color: '#f3f4f6',
             }}
-            formatter={(value, name) => {
-              if (name === 'balance') return ['Saldo', `R$ ${value.toLocaleString('pt-BR')}`];
-              if (name === 'sent') return ['Enviado', `R$ ${value.toLocaleString('pt-BR')}`];
-              if (name === 'received') return ['Recebido', `R$ ${value.toLocaleString('pt-BR')}`];
-              return [name, value];
+            formatter={(value: number | undefined, name: string | undefined) => {
+              const v = value ?? 0;
+              if (name === 'balance') return ['Saldo', `R$ ${v.toLocaleString('pt-BR')}`];
+              if (name === 'sent') return ['Enviado', `R$ ${v.toLocaleString('pt-BR')}`];
+              if (name === 'received') return ['Recebido', `R$ ${v.toLocaleString('pt-BR')}`];
+              return [name, v];
             }}
           />
           <Legend />
@@ -115,7 +116,7 @@ export function TransactionVolumeChart({ data }: TransactionVolumeProps) {
               borderRadius: '8px',
               color: '#f3f4f6',
             }}
-            formatter={(value) => [`Volume: R$ ${value.toLocaleString('pt-BR')}`]}
+            formatter={(value: number | undefined) => [`Volume: R$ ${(value ?? 0).toLocaleString('pt-BR')}`]}
           />
           <Bar 
             dataKey="volume" 
@@ -146,7 +147,7 @@ export function TransactionTypeDistribution({ data }: TransactionTypeDistributio
             cx="50%"
             cy="50%"
             labelLine={false}
-            label={(entry) => `${entry.name}: ${(entry.percent * 100).toFixed(1)}%`}
+            label={(entry) => `${entry.name}: ${((entry.percent ?? 0) * 100).toFixed(1)}%`}
             outerRadius={80}
             fill="#8884d8"
           >
@@ -161,7 +162,7 @@ export function TransactionTypeDistribution({ data }: TransactionTypeDistributio
               borderRadius: '8px',
               color: '#f3f4f6',
             }}
-            formatter={(value) => `R$ ${value.toLocaleString('pt-BR')}`}
+            formatter={(value: number | undefined) => `R$ ${(value ?? 0).toLocaleString('pt-BR')}`}
           />
         </PieChart>
       </ResponsiveContainer>

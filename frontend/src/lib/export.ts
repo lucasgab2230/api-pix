@@ -1,8 +1,7 @@
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import { Stringifiable } from 'jspdf-autotable/dist/types';
 
-export function exportToPDF(transactions: any[], filename: string = 'extrato.pdf') {
+export function exportToPDF(transactions: unknown[], filename: string = 'extrato.pdf') {
   const doc = new jsPDF();
 
   doc.setFontSize(16);
@@ -11,34 +10,34 @@ export function exportToPDF(transactions: any[], filename: string = 'extrato.pdf
   doc.setFontSize(10);
   doc.text(`Data de geração: ${new Date().toLocaleDateString('pt-BR')}`, 14, 30);
 
-  const tableData = transactions.map((t, index) => [
+  const tableData = transactions.map((t: any, index: number) => [
     index + 1,
     t.description || 'PIX',
-    t.senderName,
-    t.receiverName,
-    new Date(t.createdAt).toLocaleDateString('pt-BR'),
-    t.amount.toFixed(2),
-    t.status === 'completed' ? 'Concluída' : 
-    t.status === 'pending' ? 'Pendente' : 
-    t.status === 'failed' ? 'Falhou' : 
-    t.status === 'cancelled' ? 'Cancelada' : t.status,
+    t.senderName || '',
+    t.receiverName || '',
+    new Date(t.createdAt || Date.now()).toLocaleDateString('pt-BR'),
+    (t.amount || 0).toFixed(2),
+    t.status === 'completed' ? 'Concluída' :
+    t.status === 'pending' ? 'Pendente' :
+    t.status === 'failed' ? 'Falhou' :
+    t.status === 'cancelled' ? 'Cancelada' : t.status || '',
   ]);
 
   autoTable(doc, {
     startY: 40,
     head: [['#', 'Descrição', 'Remetente', 'Destinatário', 'Data', 'Valor', 'Status']],
-    body: tableData as Stringifiable[][],
+    body: tableData as any[][],
     theme: 'grid',
     styles: {
       fontSize: 8,
-      headStyles: {
-        fillColor: [14, 165, 233],
-        textColor: [255, 255, 255],
-        fontStyle: 'bold',
-      },
-      alternateRowStyles: {
-        fillColor: [240, 240, 240],
-      },
+    },
+    headStyles: {
+      fillColor: [14, 165, 233],
+      textColor: [255, 255, 255],
+      fontStyle: 'bold',
+    },
+    alternateRowStyles: {
+      fillColor: [240, 240, 240],
     },
     columnStyles: {
       0: { cellWidth: 8 },
@@ -52,42 +51,42 @@ export function exportToPDF(transactions: any[], filename: string = 'extrato.pdf
   });
 
   const totalSent = transactions
-    .filter(t => t.status === 'completed')
-    .reduce((sum, t) => sum + t.amount, 0);
+    .filter((t: any) => t.status === 'completed')
+    .reduce((sum: number, t: any) => sum + (t.amount || 0), 0);
 
   const totalReceived = transactions
-    .filter(t => t.status === 'completed')
-    .reduce((sum, t) => sum + t.amount, 0);
+    .filter((t: any) => t.status === 'completed')
+    .reduce((sum: number, t: any) => sum + (t.amount || 0), 0);
 
-  const finalY = (doc as any).lastAutoTable.finalY + 10;
+  const finalY = (doc as any).lastAutoTable?.finalY ?? 62 + 10;
   doc.setFontSize(12);
-  doc.setFont(undefined, 'bold');
+  doc.setFont('helvetica', 'bold');
   doc.text(`Total Enviado: R$ ${totalSent.toFixed(2)}`, 14, finalY);
   doc.text(`Total Recebido: R$ ${totalReceived.toFixed(2)}`, 14, finalY + 8);
   doc.text(`Saldo: R$ ${(totalReceived - totalSent).toFixed(2)}`, 14, finalY + 16);
 
-  doc.setFont(undefined, 'normal');
+  doc.setFont('helvetica', 'normal');
   doc.setFontSize(8);
   doc.text('Documento gerado automaticamente por PIX BaaS', 14, 270);
 
   doc.save(filename);
 }
 
-export function exportToCSV(transactions: any[], filename: string = 'extrato.csv') {
+export function exportToCSV(transactions: unknown[], filename: string = 'extrato.csv') {
   const headers = ['ID', 'Descrição', 'Remetente', 'Destinatário', 'Data', 'Valor', 'Status', 'Criado Em', 'Atualizado Em'];
   
   const csvData = [
     headers.join(','),
-    ...transactions.map(t => [
-      t.id,
+    ...transactions.map((t: any) => [
+      t.id || '',
       `"${t.description || 'PIX'}"`,
-      `"${t.senderName}"`,
-      `"${t.receiverName}"`,
-      `"${new Date(t.createdAt).toLocaleDateString('pt-BR')}"`,
-      t.amount.toFixed(2),
-      t.status,
-      `"${new Date(t.createdAt).toLocaleString('pt-BR')}"`,
-      `"${new Date(t.updatedAt).toLocaleString('pt-BR')}"`,
+      `"${t.senderName || ''}"`,
+      `"${t.receiverName || ''}"`,
+      `"${new Date(t.createdAt || Date.now()).toLocaleDateString('pt-BR')}"`,
+      (t.amount || 0).toFixed(2),
+      t.status || '',
+      `"${new Date(t.createdAt || Date.now()).toLocaleString('pt-BR')}"`,
+      `"${new Date(t.updatedAt || Date.now()).toLocaleString('pt-BR')}"`,
     ].join(',')),
   ].join('\n');
 
@@ -106,7 +105,7 @@ export function exportToCSV(transactions: any[], filename: string = 'extrato.csv
   URL.revokeObjectURL(url);
 }
 
-export function generateBalanceReport(pixKeys: any[], transactions: any[]) {
+export function generateBalanceReport(pixKeys: unknown[], transactions: unknown[]) {
   const doc = new jsPDF();
 
   doc.setFontSize(16);
@@ -116,29 +115,29 @@ export function generateBalanceReport(pixKeys: any[], transactions: any[]) {
   doc.text(`Data de geração: ${new Date().toLocaleDateString('pt-BR')}`, 14, 30);
   doc.text('', 14, 35);
 
-  const keysData = pixKeys.map((k, index) => [
+  const keysData = pixKeys.map((k: any, index: number) => [
     index + 1,
-    k.name,
-    k.type,
-    k.key,
-    k.bank,
-    k.account,
-    k.balance.toFixed(2),
+    k.name || '',
+    k.type || '',
+    k.key || '',
+    k.bank || '',
+    k.account || '',
+    (k.balance || 0).toFixed(2),
     k.active ? 'Ativa' : 'Inativa',
   ]);
 
   autoTable(doc, {
     startY: 40,
     head: [['#', 'Nome', 'Tipo', 'Chave', 'Banco', 'Conta', 'Saldo', 'Status']],
-    body: keysData as Stringifiable[][],
+    body: keysData as any[][],
     theme: 'grid',
     styles: {
       fontSize: 8,
-      headStyles: {
-        fillColor: [14, 165, 233],
-        textColor: [255, 255, 255],
-        fontStyle: 'bold',
-      },
+    },
+    headStyles: {
+      fillColor: [14, 165, 233],
+      textColor: [255, 255, 255],
+      fontStyle: 'bold',
     },
     columnStyles: {
       0: { cellWidth: 6 },
@@ -152,26 +151,26 @@ export function generateBalanceReport(pixKeys: any[], transactions: any[]) {
     },
   });
 
-  const totalBalance = pixKeys.reduce((sum, k) => sum + k.balance, 0);
-  const keysY = (doc as any).lastAutoTable.finalY + 10;
+  const totalBalance = (pixKeys as Array<{ balance: number }>).reduce((sum, k) => sum + k.balance, 0);
+  const keysY = (doc as any).lastAutoTable?.finalY ?? 62 + 10;
   doc.setFontSize(12);
-  doc.setFont(undefined, 'bold');
+  doc.setFont('helvetica', 'bold');
   doc.text(`Saldo Total: R$ ${totalBalance.toFixed(2)}`, 14, keysY);
   doc.text(`Total de Chaves: ${pixKeys.length}`, 14, keysY + 8);
 
-  const completedTransactions = transactions.filter(t => t.status === 'completed');
+  const completedTransactions = transactions.filter((t: any) => t.status === 'completed');
   const totalSent = completedTransactions
-    .filter(t => t.senderName === 'Você')
-    .reduce((sum, t) => sum + t.amount, 0);
+    .filter((t: any) => t.senderName === 'Você')
+    .reduce((sum: number, t: any) => sum + (t.amount || 0), 0);
   const totalReceived = completedTransactions
-    .filter(t => t.receiverName === 'Você')
-    .reduce((sum, t) => sum + t.amount, 0);
+    .filter((t: any) => t.receiverName === 'Você')
+    .reduce((sum: number, t: any) => sum + (t.amount || 0), 0);
 
   doc.text(`Total Enviado: R$ ${totalSent.toFixed(2)}`, 14, keysY + 16);
   doc.text(`Total Recebido: R$ ${totalReceived.toFixed(2)}`, 14, keysY + 24);
   doc.text(`Saldo de Transações: R$ ${(totalReceived - totalSent).toFixed(2)}`, 14, keysY + 32);
 
-  doc.setFont(undefined, 'normal');
+  doc.setFont('helvetica', 'normal');
   doc.setFontSize(8);
   doc.text('Documento gerado automaticamente por PIX BaaS', 14, 260);
 

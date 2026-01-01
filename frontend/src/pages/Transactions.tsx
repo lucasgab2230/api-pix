@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowUpRight, ArrowDownLeft, Clock, XCircle, CheckCircle, Filter, Download } from 'lucide-react';
-import { pixApi, Transaction } from '../lib/api';
+import { Clock, XCircle, CheckCircle, Filter, Download } from 'lucide-react';
+import { pixApi } from '../lib/api';
+import type { Transaction } from '../lib/api';
 import { Button } from '../components/Button';
 import { Card } from '../components/Card';
 import { formatCurrency } from '../lib/validators';

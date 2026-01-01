@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus, CreditCard, Trash2, Eye, EyeOff } from 'lucide-react';
-import { pixApi, PixKey } from '../lib/api';
-import { validatePixKey, validateBankAccount, validateAgency, maskCPF, maskPhone, generateUUID } from '../lib/validators';
+import { Plus, CreditCard, Trash2 } from 'lucide-react';
+import type { PixKey } from '../lib/api';
+import { pixApi } from '../lib/api';
+import { validatePixKey, validateBankAccount, validateAgency, maskCPF, maskPhone, generateUUID, formatCurrency } from '../lib/validators';
 import { Button } from '../components/Button';
 import { Input } from '../components/Input';
 import { Card } from '../components/Card';
-import { formatCurrency } from '../lib/validators';
 
 type PixKeyType = 'cpf' | 'email' | 'phone' | 'random';
 
@@ -91,8 +91,8 @@ export function PixKeys() {
       });
       setErrors({});
       loadPixKeys();
-    } catch (error: any) {
-      setErrors({ submit: error.message || 'Erro ao criar chave PIX' });
+    } catch (error: unknown) {
+      setErrors({ submit: error instanceof Error ? error.message : 'Erro ao criar chave PIX' });
     } finally {
       setSubmitting(false);
     }

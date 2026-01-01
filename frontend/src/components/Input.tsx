@@ -1,9 +1,11 @@
-import { InputHTMLAttributes, forwardRef } from 'react';
+import type { InputHTMLAttributes } from 'react';
+import type { ReactNode } from 'react';
+import { forwardRef } from 'react';
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   error?: string;
-  helperText?: string;
+  helperText?: string | ReactNode;
 }
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(

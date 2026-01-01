@@ -3,12 +3,13 @@ import { LogOut, Wallet, ArrowUpRight, ArrowDownLeft, AlertTriangle, CheckCircle
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useRealtime } from '../contexts/RealtimeContext';
-import { pixApi, PixKey, Transaction } from '../lib/api';
+import type { PixKey, Transaction } from '../lib/api';
+import { pixApi } from '../lib/api';
 import { formatCurrency, BACEN_LIMITS } from '../lib/validators';
 import { Button } from '../components/Button';
 import { Card } from '../components/Card';
 import { BalanceChart, TransactionVolumeChart, TransactionTypeDistribution } from '../components/Charts';
-import { exportToPDF, exportToCSV, generateBalanceReport } from '../lib/export';
+import { exportToCSV, generateBalanceReport } from '../lib/export';
 
 export function Dashboard() {
   const navigate = useNavigate();
@@ -25,7 +26,7 @@ export function Dashboard() {
   }, []);
 
   useEffect(() => {
-    if (realtimeConnected) {
+    if (realtimeConnected && realtimeEvents.length > 0) {
       realtimeEvents.forEach(event => {
         if (event.type === 'balance' || event.type === 'pix_key') {
           loadPixKeys();
