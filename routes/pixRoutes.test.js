@@ -15,7 +15,7 @@ describe('PIX Routes', () => {
     test('should create a new PIX key with valid data', async () => {
       const newKey = {
         type: 'cpf',
-        key: '12345678901',
+        key: '12345678909',
         name: 'Test User',
         bank: 'Test Bank',
         account: '12345-6',
@@ -35,7 +35,7 @@ describe('PIX Routes', () => {
     test('should return 400 for missing fields', async () => {
       const incompleteKey = {
         type: 'cpf',
-        key: '12345678901'
+        key: '12345678909'
       };
 
       await request(app)
@@ -54,7 +54,23 @@ describe('PIX Routes', () => {
     test('should return 400 for invalid type', async () => {
       const invalidKey = {
         type: 'invalid',
-        key: '12345678901',
+        key: '12345678909',
+        name: 'Test User',
+        bank: 'Test Bank',
+        account: '12345-6',
+        agency: '0001'
+      };
+
+      await request(app)
+        .post('/api/pix/keys')
+        .send(invalidKey)
+        .expect(400);
+    });
+
+    test('should return 400 for invalid CPF format', async () => {
+      const invalidKey = {
+        type: 'cpf',
+        key: '12345678900',
         name: 'Test User',
         bank: 'Test Bank',
         account: '12345-6',
@@ -70,7 +86,7 @@ describe('PIX Routes', () => {
     test('should return 409 for duplicate key', async () => {
       const duplicateKey = {
         type: 'cpf',
-        key: '12345678900',
+        key: '52998224725',
         name: 'Test User',
         bank: 'Test Bank',
         account: '12345-6',
@@ -87,10 +103,10 @@ describe('PIX Routes', () => {
   describe('GET /api/pix/keys/:key', () => {
     test('should return a PIX key', async () => {
       const response = await request(app)
-        .get('/api/pix/keys/12345678900')
+        .get('/api/pix/keys/52998224725')
         .expect(200);
 
-      expect(response.body).toHaveProperty('key', '12345678900');
+      expect(response.body).toHaveProperty('key', '52998224725');
       expect(response.body).toHaveProperty('name');
     });
 
@@ -115,13 +131,13 @@ describe('PIX Routes', () => {
   describe('DELETE /api/pix/keys/:key', () => {
     test('should delete a PIX key', async () => {
       const response = await request(app)
-        .delete('/api/pix/keys/12345678900')
+        .delete('/api/pix/keys/52998224725')
         .expect(200);
 
       expect(response.body).toHaveProperty('message', 'PIX key deleted successfully');
 
       const keyResponse = await request(app)
-        .get('/api/pix/keys/12345678900')
+        .get('/api/pix/keys/52998224725')
         .expect(200);
 
       expect(keyResponse.body.active).toBe(false);

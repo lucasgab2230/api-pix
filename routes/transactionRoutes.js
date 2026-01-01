@@ -10,10 +10,6 @@ router.post('/', (req, res) => {
       return res.status(400).json({ error: 'Missing required fields: senderKey, receiverKey, amount' });
     }
 
-    if (amount <= 0) {
-      return res.status(400).json({ error: 'Amount must be greater than 0' });
-    }
-
     const transaction = pixService.createTransaction(
       senderKey,
       receiverKey,
@@ -23,12 +19,13 @@ router.post('/', (req, res) => {
 
     res.status(201).json(transaction);
   } catch (error) {
-    if (error.message === 'Invalid PIX key' || 
-        error.message === 'Inactive PIX key' ||
-        error.message === 'Cannot send to same key') {
-      return res.status(400).json({ error: error.message });
-    }
-    res.status(500).json({ error: error.message });
+    const statusCode = error.message.includes('Invalid') || 
+                       error.message.includes('Inactive') ||
+                       error.message.includes('Insufficient') ||
+                       error.message.includes('Cannot send') ||
+                       error.message.includes('limit') ||
+                       error.message.includes('exceeded') ? 400 : 500;
+    res.status(statusCode).json({ error: error.message });
   }
 });
 
@@ -63,6 +60,17 @@ router.get('/', (req, res) => {
     res.json(transactions);
   } catch (error) {
     res.status(500).json({ error: error.message });
+  }
+});
+
+router.delete('/:id', (req, res) => {
+  try {
+    const { id } = req.params;
+    const transaction = pixService.cancelTransaction(id);
+    res.json(transaction);
+  } catch (error) {
+    const statusCode = error.message === 'Transaction not found' ? 404 : 400;
+    res.status(statusCode).json({ error: error.message });
   }
 });
 

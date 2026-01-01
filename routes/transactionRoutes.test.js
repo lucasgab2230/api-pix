@@ -14,7 +14,7 @@ describe('Transaction Routes', () => {
   describe('POST /api/transactions', () => {
     test('should create a transaction with valid data', async () => {
       const transaction = {
-        senderKey: '12345678900',
+        senderKey: '52998224725',
         receiverKey: '+5511999999999',
         amount: 100.50,
         description: 'Payment'
@@ -29,12 +29,12 @@ describe('Transaction Routes', () => {
       expect(response.body.senderKey).toBe(transaction.senderKey);
       expect(response.body.receiverKey).toBe(transaction.receiverKey);
       expect(response.body.amount).toBe(transaction.amount);
-      expect(response.body.status).toBe('completed');
+      expect(response.body.status).toBe('pending');
     });
 
     test('should return 400 for missing required fields', async () => {
       const incompleteTransaction = {
-        senderKey: '12345678900'
+        senderKey: '52998224725'
       };
 
       await request(app)
@@ -43,7 +43,7 @@ describe('Transaction Routes', () => {
         .expect(400);
 
       const incompleteTransaction2 = {
-        senderKey: '12345678900',
+        senderKey: '52998224725',
         receiverKey: '+5511999999999'
       };
 
@@ -55,7 +55,7 @@ describe('Transaction Routes', () => {
 
     test('should return 400 for amount less than or equal to 0', async () => {
       const transaction = {
-        senderKey: '12345678900',
+        senderKey: '52998224725',
         receiverKey: '+5511999999999',
         amount: 0
       };
@@ -66,7 +66,7 @@ describe('Transaction Routes', () => {
         .expect(400);
 
       const transaction2 = {
-        senderKey: '12345678900',
+        senderKey: '52998224725',
         receiverKey: '+5511999999999',
         amount: -10
       };
@@ -92,7 +92,7 @@ describe('Transaction Routes', () => {
 
     test('should return 400 for invalid receiver key', async () => {
       const transaction = {
-        senderKey: '12345678900',
+        senderKey: '52998224725',
         receiverKey: '00000000000',
         amount: 100
       };
@@ -105,8 +105,8 @@ describe('Transaction Routes', () => {
 
     test('should return 400 for same sender and receiver', async () => {
       const transaction = {
-        senderKey: '12345678900',
-        receiverKey: '12345678900',
+        senderKey: '52998224725',
+        receiverKey: '52998224725',
         amount: 100
       };
 
@@ -118,7 +118,7 @@ describe('Transaction Routes', () => {
 
     test('should create transaction without description', async () => {
       const transaction = {
-        senderKey: '12345678900',
+        senderKey: '52998224725',
         receiverKey: '+5511999999999',
         amount: 100
       };
@@ -137,7 +137,7 @@ describe('Transaction Routes', () => {
       const createResponse = await request(app)
         .post('/api/transactions')
         .send({
-          senderKey: '12345678900',
+          senderKey: '52998224725',
           receiverKey: '+5511999999999',
           amount: 100
         });
@@ -163,7 +163,7 @@ describe('Transaction Routes', () => {
       await request(app)
         .post('/api/transactions')
         .send({
-          senderKey: '12345678900',
+          senderKey: '52998224725',
           receiverKey: '+5511999999999',
           amount: 100
         });
@@ -171,13 +171,13 @@ describe('Transaction Routes', () => {
       await request(app)
         .post('/api/transactions')
         .send({
-          senderKey: '12345678900',
+          senderKey: '52998224725',
           receiverKey: '+5511999999999',
           amount: 50
         });
 
       const response = await request(app)
-        .get('/api/transactions/pix/12345678900')
+        .get('/api/transactions/pix/52998224725')
         .expect(200);
 
       expect(Array.isArray(response.body)).toBe(true);
@@ -190,7 +190,7 @@ describe('Transaction Routes', () => {
       await request(app)
         .post('/api/transactions')
         .send({
-          senderKey: '12345678900',
+          senderKey: '52998224725',
           receiverKey: '+5511999999999',
           amount: 100
         });

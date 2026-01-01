@@ -42,7 +42,7 @@ describe('Server', () => {
     const response = await request(server)
       .post('/api/transactions')
       .send({
-        senderKey: '12345678900',
+        senderKey: '52998224725',
         receiverKey: '+5511999999999',
         amount: 100
       })

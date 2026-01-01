@@ -1,97 +1,117 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuites name="jest tests" tests="43" failures="0" errors="0" time="4.021">
-  <testsuite name="Server" errors="0" failures="0" skipped="0" timestamp="2026-01-01T01:52:46" time="2.993" tests="6">
-    <testcase classname="Server" name="should load server without errors" time="0.013">
+<testsuites name="jest tests" tests="53" failures="0" errors="0" time="5.599">
+  <testsuite name="PixService" errors="0" failures="0" skipped="0" timestamp="2026-01-01T02:30:16" time="2.105" tests="26">
+    <testcase classname="PixService registerPixKey" name="should register a new PIX key with CPF" time="0.021">
     </testcase>
-    <testcase classname="Server" name="should have CORS middleware configured" time="0.077">
+    <testcase classname="PixService registerPixKey" name="should register a new PIX key with email" time="0.012">
     </testcase>
-    <testcase classname="Server" name="should not have X-Powered-By header" time="0.012">
+    <testcase classname="PixService registerPixKey" name="should throw error for invalid CPF format" time="0.066">
     </testcase>
-    <testcase classname="Server" name="should register pix routes" time="0.011">
-    </testcase>
-    <testcase classname="Server" name="should register transaction routes" time="0.017">
-    </testcase>
-    <testcase classname="Server" name="should handle JSON body parsing" time="0.041">
-    </testcase>
-  </testsuite>
-  <testsuite name="PIX Routes" errors="0" failures="0" skipped="0" timestamp="2026-01-01T01:52:46" time="3.031" tests="9">
-    <testcase classname="PIX Routes POST /api/pix/keys" name="should create a new PIX key with valid data" time="0.158">
-    </testcase>
-    <testcase classname="PIX Routes POST /api/pix/keys" name="should return 400 for missing fields" time="0.021">
-    </testcase>
-    <testcase classname="PIX Routes POST /api/pix/keys" name="should return 400 for invalid type" time="0.013">
-    </testcase>
-    <testcase classname="PIX Routes POST /api/pix/keys" name="should return 409 for duplicate key" time="0.016">
-    </testcase>
-    <testcase classname="PIX Routes GET /api/pix/keys/:key" name="should return a PIX key" time="0.014">
-    </testcase>
-    <testcase classname="PIX Routes GET /api/pix/keys/:key" name="should return 404 for non-existent key" time="0.01">
-    </testcase>
-    <testcase classname="PIX Routes GET /api/pix/keys" name="should return all PIX keys" time="0.022">
-    </testcase>
-    <testcase classname="PIX Routes DELETE /api/pix/keys/:key" name="should delete a PIX key" time="0.047">
-    </testcase>
-    <testcase classname="PIX Routes DELETE /api/pix/keys/:key" name="should return 404 for non-existent key" time="0.008">
-    </testcase>
-  </testsuite>
-  <testsuite name="Transaction Routes" errors="0" failures="0" skipped="0" timestamp="2026-01-01T01:52:46" time="3.11" tests="11">
-    <testcase classname="Transaction Routes POST /api/transactions" name="should create a transaction with valid data" time="0.12">
-    </testcase>
-    <testcase classname="Transaction Routes POST /api/transactions" name="should return 400 for missing required fields" time="0.023">
-    </testcase>
-    <testcase classname="Transaction Routes POST /api/transactions" name="should return 400 for amount less than or equal to 0" time="0.024">
-    </testcase>
-    <testcase classname="Transaction Routes POST /api/transactions" name="should return 400 for invalid sender key" time="0.011">
-    </testcase>
-    <testcase classname="Transaction Routes POST /api/transactions" name="should return 400 for invalid receiver key" time="0.011">
-    </testcase>
-    <testcase classname="Transaction Routes POST /api/transactions" name="should return 400 for same sender and receiver" time="0.027">
-    </testcase>
-    <testcase classname="Transaction Routes POST /api/transactions" name="should create transaction without description" time="0.03">
-    </testcase>
-    <testcase classname="Transaction Routes GET /api/transactions/:id" name="should return a transaction by id" time="0.025">
-    </testcase>
-    <testcase classname="Transaction Routes GET /api/transactions/:id" name="should return 404 for non-existent transaction" time="0.009">
-    </testcase>
-    <testcase classname="Transaction Routes GET /api/transactions/pix/:key" name="should return transactions by PIX key" time="0.027">
-    </testcase>
-    <testcase classname="Transaction Routes GET /api/transactions" name="should return all transactions" time="0.014">
-    </testcase>
-  </testsuite>
-  <testsuite name="PixService" errors="0" failures="0" skipped="0" timestamp="2026-01-01T01:52:49" time="0.213" tests="17">
-    <testcase classname="PixService registerPixKey" name="should register a new PIX key with CPF" time="0.002">
-    </testcase>
-    <testcase classname="PixService registerPixKey" name="should register a new PIX key with email" time="0.002">
-    </testcase>
-    <testcase classname="PixService getPixKey" name="should return the correct PIX key" time="0.003">
+    <testcase classname="PixService getPixKey" name="should return the correct PIX key" time="0.004">
     </testcase>
     <testcase classname="PixService getPixKey" name="should return undefined for non-existent key" time="0.003">
     </testcase>
-    <testcase classname="PixService getAllPixKeys" name="should return all PIX keys" time="0.003">
+    <testcase classname="PixService getAllPixKeys" name="should return all PIX keys" time="0.002">
     </testcase>
-    <testcase classname="PixService deletePixKey" name="should deactivate a PIX key" time="0.002">
+    <testcase classname="PixService deletePixKey" name="should deactivate a PIX key" time="0.004">
     </testcase>
-    <testcase classname="PixService deletePixKey" name="should return false for non-existent key" time="0.002">
+    <testcase classname="PixService deletePixKey" name="should return false for non-existent key" time="0.003">
     </testcase>
-    <testcase classname="PixService createTransaction" name="should create a valid transaction" time="0.002">
+    <testcase classname="PixService createTransaction" name="should create a valid transaction" time="0.005">
     </testcase>
-    <testcase classname="PixService createTransaction" name="should throw error for invalid sender key" time="0.024">
+    <testcase classname="PixService createTransaction" name="should throw error for invalid sender key" time="0.003">
     </testcase>
-    <testcase classname="PixService createTransaction" name="should throw error for invalid receiver key" time="0.002">
+    <testcase classname="PixService createTransaction" name="should throw error for invalid receiver key" time="0.015">
     </testcase>
-    <testcase classname="PixService createTransaction" name="should throw error when sending to same key" time="0.003">
+    <testcase classname="PixService createTransaction" name="should throw error when sending to same key" time="0.005">
     </testcase>
-    <testcase classname="PixService createTransaction" name="should throw error for inactive keys" time="0.012">
+    <testcase classname="PixService createTransaction" name="should throw error for inactive keys" time="0.006">
     </testcase>
-    <testcase classname="PixService getTransaction" name="should return the correct transaction" time="0.003">
+    <testcase classname="PixService createTransaction" name="should throw error for insufficient balance" time="0.004">
     </testcase>
-    <testcase classname="PixService getTransaction" name="should return undefined for non-existent transaction" time="0.002">
+    <testcase classname="PixService getTransaction" name="should return the correct transaction" time="0.004">
     </testcase>
-    <testcase classname="PixService getTransactionsByPixKey" name="should return all transactions for a PIX key as sender" time="0.002">
+    <testcase classname="PixService getTransaction" name="should return undefined for non-existent transaction" time="0.004">
     </testcase>
-    <testcase classname="PixService getTransactionsByPixKey" name="should return all transactions for a PIX key as receiver" time="0.001">
+    <testcase classname="PixService getTransactionsByPixKey" name="should return all transactions for a PIX key as sender" time="0.003">
+    </testcase>
+    <testcase classname="PixService getTransactionsByPixKey" name="should return all transactions for a PIX key as receiver" time="0.002">
     </testcase>
     <testcase classname="PixService getAllTransactions" name="should return all transactions" time="0.002">
+    </testcase>
+    <testcase classname="PixService Balance Management" name="should deposit funds to a PIX key" time="0.001">
+    </testcase>
+    <testcase classname="PixService Balance Management" name="should withdraw funds from a PIX key" time="0.002">
+    </testcase>
+    <testcase classname="PixService Balance Management" name="should throw error when withdrawing insufficient funds" time="0.002">
+    </testcase>
+    <testcase classname="PixService Balance Management" name="should return balance for a PIX key" time="0.003">
+    </testcase>
+    <testcase classname="PixService Transaction Limits" name="should enforce single transaction limit" time="0.004">
+    </testcase>
+    <testcase classname="PixService Transaction Limits" name="should cancel a pending transaction" time="0.003">
+    </testcase>
+    <testcase classname="PixService Transaction Limits" name="should throw error when cancelling completed transaction" time="0.001">
+    </testcase>
+  </testsuite>
+  <testsuite name="Transaction Routes" errors="0" failures="0" skipped="0" timestamp="2026-01-01T02:30:16" time="2.98" tests="11">
+    <testcase classname="Transaction Routes POST /api/transactions" name="should create a transaction with valid data" time="0.794">
+    </testcase>
+    <testcase classname="Transaction Routes POST /api/transactions" name="should return 400 for missing required fields" time="0.028">
+    </testcase>
+    <testcase classname="Transaction Routes POST /api/transactions" name="should return 400 for amount less than or equal to 0" time="0.023">
+    </testcase>
+    <testcase classname="Transaction Routes POST /api/transactions" name="should return 400 for invalid sender key" time="0.008">
+    </testcase>
+    <testcase classname="Transaction Routes POST /api/transactions" name="should return 400 for invalid receiver key" time="0.013">
+    </testcase>
+    <testcase classname="Transaction Routes POST /api/transactions" name="should return 400 for same sender and receiver" time="0.015">
+    </testcase>
+    <testcase classname="Transaction Routes POST /api/transactions" name="should create transaction without description" time="0.016">
+    </testcase>
+    <testcase classname="Transaction Routes GET /api/transactions/:id" name="should return a transaction by id" time="0.024">
+    </testcase>
+    <testcase classname="Transaction Routes GET /api/transactions/:id" name="should return 404 for non-existent transaction" time="0.015">
+    </testcase>
+    <testcase classname="Transaction Routes GET /api/transactions/pix/:key" name="should return transactions by PIX key" time="0.026">
+    </testcase>
+    <testcase classname="Transaction Routes GET /api/transactions" name="should return all transactions" time="0.013">
+    </testcase>
+  </testsuite>
+  <testsuite name="PIX Routes" errors="0" failures="0" skipped="0" timestamp="2026-01-01T02:30:16" time="3.044" tests="10">
+    <testcase classname="PIX Routes POST /api/pix/keys" name="should create a new PIX key with valid data" time="0.128">
+    </testcase>
+    <testcase classname="PIX Routes POST /api/pix/keys" name="should return 400 for missing fields" time="0.036">
+    </testcase>
+    <testcase classname="PIX Routes POST /api/pix/keys" name="should return 400 for invalid type" time="0.013">
+    </testcase>
+    <testcase classname="PIX Routes POST /api/pix/keys" name="should return 400 for invalid CPF format" time="0.016">
+    </testcase>
+    <testcase classname="PIX Routes POST /api/pix/keys" name="should return 409 for duplicate key" time="0.008">
+    </testcase>
+    <testcase classname="PIX Routes GET /api/pix/keys/:key" name="should return a PIX key" time="0.011">
+    </testcase>
+    <testcase classname="PIX Routes GET /api/pix/keys/:key" name="should return 404 for non-existent key" time="0.011">
+    </testcase>
+    <testcase classname="PIX Routes GET /api/pix/keys" name="should return all PIX keys" time="0.014">
+    </testcase>
+    <testcase classname="PIX Routes DELETE /api/pix/keys/:key" name="should delete a PIX key" time="0.013">
+    </testcase>
+    <testcase classname="PIX Routes DELETE /api/pix/keys/:key" name="should return 404 for non-existent key" time="0.009">
+    </testcase>
+  </testsuite>
+  <testsuite name="Server" errors="0" failures="0" skipped="0" timestamp="2026-01-01T02:30:18" time="1.449" tests="6">
+    <testcase classname="Server" name="should load server without errors" time="0.002">
+    </testcase>
+    <testcase classname="Server" name="should have CORS middleware configured" time="0.045">
+    </testcase>
+    <testcase classname="Server" name="should not have X-Powered-By header" time="0.009">
+    </testcase>
+    <testcase classname="Server" name="should register pix routes" time="0.021">
+    </testcase>
+    <testcase classname="Server" name="should register transaction routes" time="0.008">
+    </testcase>
+    <testcase classname="Server" name="should handle JSON body parsing" time="0.029">
     </testcase>
   </testsuite>
 </testsuites>
