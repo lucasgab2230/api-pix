@@ -7,6 +7,25 @@ export default [
   },
   js.configs.recommended,
   {
+    files: ['**/*.test.js', '**/*.spec.js', '__mocks__/**/*.js'],
+    languageOptions: {
+      ecmaVersion: 'latest',
+      sourceType: 'commonjs',
+      globals: {
+        ...globals.node,
+        describe: 'readonly',
+        test: 'readonly',
+        it: 'readonly',
+        expect: 'readonly',
+        beforeEach: 'readonly',
+        afterEach: 'readonly',
+        beforeAll: 'readonly',
+        afterAll: 'readonly',
+        jest: 'readonly'
+      }
+    }
+  },
+  {
     languageOptions: {
       ecmaVersion: 'latest',
       sourceType: 'commonjs',
